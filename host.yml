@@ -78,6 +78,7 @@
       register: result
 
     - name: Restart NetworkManager
+      become: true
       ansible.builtin.service:
         state: restarted
         name: NetworkManager
