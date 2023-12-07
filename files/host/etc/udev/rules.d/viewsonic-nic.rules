@@ -1,0 +1,2 @@
+# Ignore integrated NIC from ViewSonic VP2768a monitor
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="0bda", ATTRS{idProduct}=="8153", ATTR{authorized}="0"

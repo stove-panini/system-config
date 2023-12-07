@@ -1,0 +1,2 @@
+# Install in home & don't append Ruby version to executable
+install: --user-install --no-format-executable

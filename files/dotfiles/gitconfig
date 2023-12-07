@@ -1,0 +1,30 @@
+# This is Git's per-user configuration file.
+[core]
+  excludesfile = ~/.gitignore_global
+
+[pull]
+  rebase = false
+
+[push]
+  autoSetupRemote = true
+  followTags = true
+
+[fetch]
+  prune = true
+
+[init]
+  defaultBranch = main
+
+[user]
+  name = stove-panini
+  email = stephen@trashnet.xyz
+  signingkey = ~/.ssh/id_ed25519
+
+[gpg]
+  format = ssh
+
+[commit]
+  gpgsign = true
+
+[includeIf "gitdir:~/Projects/SAGE/"]
+  path = ~/Projects/SAGE/.gitconfig

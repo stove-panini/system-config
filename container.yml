@@ -1,0 +1,54 @@
+---
+- name: Configure Distrobox Container
+  hosts: container
+  gather_facts: true
+  tasks:
+    - name: Run tasks for this distro
+      ansible.builtin.include_tasks: "{{ ansible_facts['distribution'] ~ '.yml' }}"
+
+    - name: Install OS packages
+      become: true
+      ansible.builtin.package:
+        state: latest
+        name: "{{ os_pkgs }}"
+      when: os_pkgs is defined
+      diff: true
+
+    - name: Install npm packages
+      become: true
+      community.general.npm:
+        state: "{{ 'present' if item.version is defined else 'latest' }}"
+        name: "{{ item.name | default(item) }}"
+        version: "{{ item.version | default(None) }}"
+        global: true
+      loop: "{{ npm_pkgs }}"
+      when: npm_pkgs is defined
+
+    - name: Install Ruby gems
+      community.general.gem:
+        state: "{{ 'present' if item.version is defined else 'latest' }}"
+        name: "{{ item.name | default(item) }}"
+        version: "{{ item.version | default(None) }}"
+        user_install: true
+        norc: false
+      loop: "{{ ruby_gems }}"
+      when: ruby_gems is defined
+
+    - name: Homebrew
+      when: brew_pkgs is defined
+      block:
+        - name: Install homebrew
+          ansible.builtin.shell:
+            cmd: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+            creates: "/home/linuxbrew/.linuxbrew/bin/brew"
+
+        - name: Update homebrew
+          community.general.homebrew:
+            update_homebrew: true
+
+        - name: Install homebrew packages
+          community.general.homebrew:
+            state: latest
+            name: "{{ item }}"
+          # Using a loop to see the changed status of each package
+          loop: "{{ brew_pkgs }}"

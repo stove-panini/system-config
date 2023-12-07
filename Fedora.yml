@@ -1,0 +1,55 @@
+---
+- name: Set Fedora package lists
+  ansible.builtin.set_fact:
+    os_pkgs:
+      - ansible
+      - awscli
+      - bash-completion
+      - bind-utils
+      - file
+      - fzf
+      - golang
+      - golang-x-tools-gopls
+      - helm
+      - htop
+      - ImageMagick
+      - jq
+      - kubernetes-client
+      - neovim
+      - nmap
+      - npm
+      - openssl
+      - pciutils
+      - pinentry
+      - python3-ansible-lint
+      - python3-lsp-server+all
+      - python3-neovim
+      - python3-pip
+      - ripgrep
+      - ruby
+      - rubygem-jekyll
+      - rubygem-puppet-lint
+      - ShellCheck
+      - terraform
+      - terraform-ls
+      - tmux
+      - usbutils
+
+    npm_pkgs:
+      - "@ansible/ansible-language-server"
+      - bash-language-server
+      - vim-language-server
+
+- name: Add Hashicorp repo
+  become: true
+  ansible.builtin.yum_repository:
+    state: present
+    name: hashicorp
+    description: Hashicorp Stable - $basearch
+    baseurl: https://rpm.releases.hashicorp.com/fedora/$releasever/$basearch/stable
+    enabled: true
+    gpgcheck: true
+    gpgkey: https://rpm.releases.hashicorp.com/gpg
+    owner: root
+    group: root
+    mode: "644"

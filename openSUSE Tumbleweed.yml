@@ -1,0 +1,63 @@
+---
+- name: Set openSUSE package lists
+  ansible.builtin.set_fact:
+    os_pkgs:
+      - ansible
+      - ansible-lint
+      - awk
+      - bind-utils
+      - ffmpeg
+      - fzf
+      - git
+      - go
+      - gopls
+      - helm
+      - htop
+      - ImageMagick
+      - jq
+      - kubernetes-client
+      - neovim
+      - nmap
+      - npm
+      - python3-python-lsp-server
+        # Suggested packages for python-lsp-server
+        # ------------------
+      - python3-autopep8
+      - python3-flake8
+      - python3-mccabe
+      - python3-pycodestyle
+      - python3-pydocstyle
+      - python3-pyflakes
+      - python3-pylint
+      - python3-rope
+      - python3-whatthepatch
+      - python3-yapf
+        # ------------------
+      - ripgrep
+      - ruby
+      - ruby-devel
+      - ShellCheck
+      - tmux
+      - yt-dlp
+
+    npm_pkgs:
+      - "@ansible/ansible-language-server"
+      - bash-language-server
+      - vim-language-server
+
+    ruby_gems:
+      - name: puppet-lint
+        version: 2.5.2
+      - jekyll
+
+    brew_pkgs:
+      - bash-completion
+      - hashicorp/tap/terraform
+      - hashicorp/tap/terraform-ls
+
+- name: Install development tools
+  become: true
+  community.general.zypper:
+    state: present
+    name: devel_C_C++
+    type: pattern

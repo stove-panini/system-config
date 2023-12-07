@@ -1,0 +1,71 @@
+#
+# ~/.profile
+#
+
+# Source user bashrc
+if [[ -f ~/.bashrc ]]; then
+    source ~/.bashrc
+fi
+
+# History control
+export HISTCONTROL='ignoreboth:erasedups'
+
+for editor in nvim vimx vim vi nano; do
+    if type $editor &>/dev/null; then
+        export EDITOR="$editor"
+        break
+    fi
+done
+
+# Install gems to user dir by default
+if type gem &>/dev/null; then
+    GEM_HOME="$(ruby -e 'puts Gem.user_dir')"
+    export GEM_HOME
+
+    PATH="$(ruby -e 'puts Gem.bindir'):$PATH"
+    export PATH
+fi
+
+# Rust
+if type cargo &>/dev/null; then
+    export PATH="${HOME}/.cargo/bin:$PATH"
+fi
+
+# Go
+if type go &>/dev/null; then
+    export GOPATH="${HOME}/Projects/go"
+    export PATH="${HOME}/Projects/go/bin:$PATH"
+fi
+
+# Homebrew
+if [[ -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+    brew_completion_script="${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
+    [[ -r $brew_completion_script ]] && source "$brew_completion_script"
+    unset brew_completion_script
+fi
+
+# FZF completion syntax & keybinds
+fzf_configs=(
+    # Arch
+    /usr/share/fzf/completion.bash
+    /usr/share/fzf/key-bindings.bash
+
+    # Debian
+    /usr/share/bash-completion/completions/fzf
+    /usr/share/doc/fzf/examples/key-bindings.bash
+
+    # Fedora
+    /usr/share/fzf/shell/key-bindings.bash
+
+    # openSUSE
+    /usr/share/bash-completion/completions/fzf
+    /usr/share/bash-completion/completions/fzf-key-bindings
+)
+
+for file in "${fzf_configs[@]}"; do
+    [[ -f "$file" ]] && source "$file"
+done
+
+unset fzf_configs file

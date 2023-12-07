@@ -1,0 +1,148 @@
+---
+- name: Configure MicroOS Host
+  hosts: host
+  gather_facts: true
+  tasks:
+    - name: Set MicroOS package lists
+      ansible.builtin.set_fact:
+        os_pkgs:
+          #- nfs-client
+          #- steam-devices
+          - systemd-network
+
+        flatpaks:
+          - ca.desrt.dconf-editor
+          - com.bitwarden.desktop
+          - com.github.IsmaelMartinez.teams_for_linux
+          - com.github.tchx84.Flatseal
+          - com.mattjakeman.ExtensionManager
+          - com.slack.Slack
+          - com.vixalien.sticky
+          - de.haeckerfelix.Fragments
+          - io.github.celluloid_player.Celluloid
+          - org.chromium.Chromium
+          - org.gimp.GIMP
+          - org.gnome.Aisleriot
+          - org.gnome.Boxes
+          - org.gnome.Calculator
+          - org.gnome.Calendar
+          - org.gnome.Characters
+          - org.gnome.DejaDup
+          - org.gnome.Evince
+          - org.gnome.FileRoller
+          - org.gnome.Firmware
+          - org.gnome.Logs
+          - org.gnome.Loupe
+          - org.gnome.Mahjongg
+          - org.gnome.Snapshot
+          - org.gnome.TextEditor
+          - org.gnome.Weather
+          - org.gnome.baobab
+          - org.gnome.clocks
+          - org.remmina.Remmina
+          - org.signal.Signal
+
+    - name: Install OS packages
+      become: true
+      community.general.zypper:
+        state: present
+        name: "{{ os_pkgs }}"
+      register: result
+
+    - name: Post-transaction
+      when: result is changed
+      block:
+        - name: Message
+          ansible.builtin.debug:
+            msg: "New packages have been installed. Please reboot before continuing."
+
+        - name: End play
+          ansible.builtin.meta: end_play
+
+    - name: Configure system services
+      become: true
+      ansible.builtin.service:
+        state: started
+        name: "{{ item }}"
+        enabled: true
+      loop:
+        - systemd-resolved
+
+    - name: Link resolv.conf to systemd-resolved's file
+      become: true
+      ansible.builtin.file:
+        state: link
+        force: true
+        src: /run/systemd/resolve/resolv.conf
+        path: /etc/resolv.conf
+      register: result
+
+    - name: Restart NetworkManager
+      ansible.builtin.service:
+        state: restarted
+        name: NetworkManager
+      when: result is changed
+
+    - name: Desktop tasks
+      when: ansible_form_factor == 'Desktop'
+      block:
+        - name: Copy system configuration files for desktop
+          become: true
+          ansible.builtin.copy:
+            src: files/host/{{ item.path }}
+            dest: /{{ item.path }}
+            owner: "{{ item.owner | default('root') }}"
+            group: "{{ item.owner | default('root') }}"
+            mode: "{{ item.mode | default('0644') }}"
+            setype: "{{ item.setype | default('_default') }}"
+          loop:
+            - path: etc/udev/rules.d/viewsonic-nic.rules
+              setype: udev_rules_t
+
+        - name: Turn off suspend on AC power for GDM
+          become: true
+          ansible.builtin.script: files/host/gsettings_gdm.sh
+          register: result
+          changed_when: result.stdout == 1
+
+    - name: Copy system configuration files
+      become: true
+      ansible.builtin.copy:
+        src: files/host/{{ item.path }}
+        dest: /{{ item.path }}
+        owner: "{{ item.owner | default('root') }}"
+        group: "{{ item.owner | default('root') }}"
+        mode: "{{ item.mode | default('0644') }}"
+      loop:
+        - path: etc/nsswitch.conf
+
+    # User configuration
+    # --------------------------------------------------------------------------
+    - name: Link user dotfiles
+      ansible.builtin.file:
+        state: link
+        force: true
+        src: "{{ item.root + item.path }}"
+        path: "~/.{{ item.path }}"
+      with_community.general.filetree: "{{ playbook_dir }}/files/dotfiles/"
+      when: "'/' not in item.path"
+
+    - name: Link user config dirs
+      ansible.builtin.file:
+        state: link
+        force: true
+        src: "{{ item.root + item.path }}"
+        path: "~/.config/{{ item.path }}"
+      with_community.general.filetree: "{{ playbook_dir }}/files/config/"
+      when: item.state == 'directory' and '/' not in item.path
+
+    - name: Install flatpaks
+      community.general.flatpak:
+        state: present
+        name: "{{ flatpaks }}"
+        method: user
+
+    - name: Set gsettings prefs
+      ansible.builtin.script: files/host/gsettings.sh
+      register: result
+      changed_when: result.stdout == 1
