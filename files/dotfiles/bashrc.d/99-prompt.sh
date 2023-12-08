@@ -48,7 +48,7 @@ __ps1_git() {
     changes="$(git status --short 2>/dev/null || :)"
 
     if [[ $tag ]]; then
-        result="● ${tag}"
+        result="◆ ${tag}"
     else
         result=" ${branch}"
     fi
