@@ -19,8 +19,9 @@ settings=(
     [org.gnome.mutter/dynamic-workspaces]="false"
     [org.gnome.desktop.wm.preferences/num-workspaces]="4"
 
-    # Show weekday in clock
+    # GNOME Shell UI
     [org.gnome.desktop.interface/clock-show-weekday]="true"
+    [org.gnome.desktop.interface/show-battery-percentage]="false"
 
     # Nautilus / file-chooser
     [org.gnome.nautilus.icon-view/default-zoom-level]="'small'"
