@@ -73,7 +73,7 @@
       ansible.builtin.file:
         state: link
         force: true
-        src: /run/systemd/resolve/resolv.conf
+        src: /run/systemd/resolve/stub-resolv.conf
         path: /etc/resolv.conf
       register: result
 
