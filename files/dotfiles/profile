@@ -7,9 +7,15 @@ if [[ -f ~/.bashrc ]]; then
     source ~/.bashrc
 fi
 
-# History control
+# History options
 export HISTCONTROL='ignoreboth:erasedups'
 
+# Use per-distrobox history files
+if [[ $DISTROBOX_ENTER_PATH ]]; then
+    HISTFILE="${HOME}/.bash_history-${CONTAINER_ID}"
+fi
+
+# Editor preference list
 for editor in nvim vimx vim vi nano; do
     if type $editor &>/dev/null; then
         export EDITOR="$editor"
