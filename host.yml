@@ -104,7 +104,7 @@
           become: true
           ansible.builtin.script: files/host/gsettings_gdm.sh
           register: result
-          changed_when: result.stdout == 1
+          changed_when: result.stdout == "1"
 
     - name: Copy system configuration files
       become: true
@@ -146,4 +146,4 @@
     - name: Set gsettings prefs
       ansible.builtin.script: files/host/gsettings.sh
       register: result
-      changed_when: result.stdout == 1
+      changed_when: result.stdout == "1"
