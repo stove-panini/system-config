@@ -19,6 +19,7 @@
       - neovim
       - nmap
       - npm
+      - python3-python-lsp-black
       - python3-python-lsp-server
         # Suggested packages for python-lsp-server
         # ------------------
