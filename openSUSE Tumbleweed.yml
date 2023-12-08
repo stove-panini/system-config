@@ -38,6 +38,7 @@
       - ruby-devel
       - ShellCheck
       - tmux
+      - wl-clipboard
       - yt-dlp
 
     npm_pkgs:
