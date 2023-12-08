@@ -7,6 +7,7 @@
       - bash-completion
       - bind-utils
       - file
+      - ffmpeg
       - fzf
       - golang
       - golang-x-tools-gopls
@@ -34,11 +35,23 @@
       - terraform-ls
       - tmux
       - usbutils
+      - yt-dlp
 
     npm_pkgs:
       - "@ansible/ansible-language-server"
       - bash-language-server
       - vim-language-server
+
+- name: Add RPMFusion repos
+  become: true
+  ansible.builtin.dnf:
+    state: present
+    name: "https://mirrors.rpmfusion.org/{{ item }}/fedora/\
+             rpmfusion-{{ item }}-release-{{ ansible_distribution_major_version }}.noarch.rpm"
+    disable_gpg_check: true
+  loop:
+    - free
+    - nonfree
 
 - name: Add Hashicorp repo
   become: true
