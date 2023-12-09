@@ -65,11 +65,10 @@ __ps1_dbox_ssh_hostname() {
 }
 
 __ps1_path() {
-    local limit pwd dirparts sub result
+    local limit result dirparts sub
 
     limit=40
-    pwd="$(pwd)"
-    result="${pwd/#$HOME/\~}" # substitute $HOME with ~
+    result="${PWD/#$HOME/\~}" # substitute $HOME with ~
 
     # Return early if not over the character limit
     if (( ${#result} <= limit )); then
@@ -124,8 +123,13 @@ _set_ps1() {
     PS1+="$(__ps1_color reset)"
 }
 
-# The first action must be to grab the exit code of the previous command, being
-# careful not to overwrite an existing PROMPT_COMMAND
+# Steal Red Hat's default PROMPT_COMMAND
+if [[ -z $PROMPT_COMMAND ]]; then
+    # shellcheck disable=SC2016
+    PROMPT_COMMAND=(_set_ec 'printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"')
+fi
+
+# Preserve existing PROMPT_COMMAND
 if [[ ${PROMPT_COMMAND[0]} != _set_ec ]]; then
     PROMPT_COMMAND=(_set_ec "${PROMPT_COMMAND[@]}")
 fi
