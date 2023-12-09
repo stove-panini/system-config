@@ -2,6 +2,26 @@
 - name: Configure MicroOS Host
   hosts: host
   gather_facts: true
+  handlers:
+    - name: Message
+      ansible.builtin.debug:
+        msg: "New packages have been installed. Please reboot before continuing."
+
+    - name: End play
+      ansible.builtin.meta: end_play
+
+    - name: Restart NetworkManager
+      become: true
+      ansible.builtin.service:
+        state: restarted
+        name: NetworkManager
+
+    - name: Daemon reload
+      become: true
+      ansible.builtin.systemd:
+        daemon_reload: true
+
+
   tasks:
     - name: Set MicroOS package lists
       ansible.builtin.set_fact:
@@ -47,75 +67,66 @@
       community.general.zypper:
         state: present
         name: "{{ os_pkgs }}"
-      register: result
+      notify:
+        - Message
+        - End play
 
-    - name: Post-transaction
-      when: result is changed
-      block:
-        - name: Message
-          ansible.builtin.debug:
-            msg: "New packages have been installed. Please reboot before continuing."
+    - name: Run handlers
+      ansible.builtin.meta: flush_handlers
 
-        - name: End play
-          ansible.builtin.meta: end_play
-
-    - name: Configure system services
+    - name: Start & enable systemd-resolved
       become: true
       ansible.builtin.service:
         state: started
-        name: "{{ item }}"
+        name: systemd-resolved
         enabled: true
-      loop:
-        - systemd-resolved
 
-    - name: Link resolv.conf to systemd-resolved's file
+    - name: Link resolv.conf to systemd-resolved's stub resolver
       become: true
       ansible.builtin.file:
         state: link
         force: true
         src: /run/systemd/resolve/stub-resolv.conf
         path: /etc/resolv.conf
-      register: result
+      notify: Restart NetworkManager
 
-    - name: Restart NetworkManager
+    - name: Enable hostname resolution in NSS via systemd-resolved
       become: true
-      ansible.builtin.service:
-        state: restarted
-        name: NetworkManager
-      when: result is changed
+      ansible.builtin.copy:
+        src: files/host/etc/nsswitch.conf
+        dest: /etc/
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Restore default getty behavior, clearing TTY1
+      become: true
+      ansible.builtin.copy:
+        src: files/host/etc/systemd/system/getty@tty1.service.d/override.conf
+        dest: /etc/systemd/system/getty@tty1.service.d/
+        owner: root
+        group: root
+        mode: 0644
+      notify: Daemon reload
 
     - name: Desktop tasks
       when: ansible_form_factor == 'Desktop'
       block:
-        - name: Copy system configuration files for desktop
+        - name: Disable builtin NIC on monitor
           become: true
           ansible.builtin.copy:
-            src: files/host/{{ item.path }}
-            dest: /{{ item.path }}
-            owner: "{{ item.owner | default('root') }}"
-            group: "{{ item.owner | default('root') }}"
-            mode: "{{ item.mode | default('0644') }}"
-            setype: "{{ item.setype | default('_default') }}"
-          loop:
-            - path: etc/udev/rules.d/viewsonic-nic.rules
-              setype: udev_rules_t
+            src: files/host/etc/udev/rules.d/viewsonic-nic.rules
+            dest: /etc/udev/rules.d/
+            owner: root
+            group: root
+            mode: 0644
+            setype: udev_rules_t
 
         - name: Turn off suspend on AC power for GDM
           become: true
           ansible.builtin.script: files/host/gsettings_gdm.sh
           register: result
           changed_when: result.stdout == "1"
-
-    - name: Copy system configuration files
-      become: true
-      ansible.builtin.copy:
-        src: files/host/{{ item.path }}
-        dest: /{{ item.path }}
-        owner: "{{ item.owner | default('root') }}"
-        group: "{{ item.owner | default('root') }}"
-        mode: "{{ item.mode | default('0644') }}"
-      loop:
-        - path: etc/nsswitch.conf
 
     # User configuration
     # --------------------------------------------------------------------------
