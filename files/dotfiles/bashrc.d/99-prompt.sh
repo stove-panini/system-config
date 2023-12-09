@@ -65,28 +65,31 @@ __ps1_dbox_ssh_hostname() {
 }
 
 __ps1_path() {
-    local limit nice_pwd nice_dir dirparts chars result
+    local limit pwd dirparts sub result
 
-    limit=60
-    nice_pwd=$(pwd | sed "s|${HOME}|~|")
+    limit=40
+    pwd="$(pwd)"
+    result="~${pwd#"$HOME"}" # substitute $HOME with ~
 
-    if (( ${#nice_pwd} <= limit )); then
-        echo -n " [${nice_pwd}]"
+    # Return early if not over the character limit
+    if (( ${#result} <= limit )); then
+        echo -n " [${result}]"
         return
     fi
 
-    # Split dirname into array
-    nice_dir=$(dirname "${nice_pwd}")
-    IFS=/ read -ra dirparts <<<"${nice_dir}"
+    # Split path (minus current dir) into array
+    IFS=/ read -ra dirparts <<<"${result}"
 
-    # Split each dir into characters, appending the first to result
+    # Substitute directory names with their first letter until the length of
+    # result is less than the character limit
     for d in "${dirparts[@]}"; do
-        mapfile -t chars < <(grep -o . <<<"$d")
-        result+="${chars[0]}/"
+        if (( ${#result} > limit )); then
+            sub="${d:0:1}" # first character of directory
+            result="${result/$d/$sub}"
+        else
+            break
+        fi
     done
-
-    # Append the full name of the current dir
-    result+=$(basename "${nice_pwd}")
 
     echo -n " [${result}]"
 }
