@@ -3,24 +3,6 @@
   hosts: host
   gather_facts: true
   become: true
-  handlers:
-    - name: Message
-      ansible.builtin.debug:
-        msg: "New packages have been installed. Please reboot before continuing."
-
-    - name: End play
-      ansible.builtin.meta: end_play
-
-    - name: Restart NetworkManager
-      ansible.builtin.service:
-        state: restarted
-        name: NetworkManager
-
-    - name: Daemon reload
-      ansible.builtin.systemd:
-        daemon_reload: true
-
-
   tasks:
     - name: Set MicroOS package lists
       ansible.builtin.set_fact:
@@ -66,7 +48,7 @@
         state: present
         name: "{{ os_pkgs }}"
       notify:
-        - Message
+        - Post-install message
         - End play
 
     - name: Run handlers
@@ -94,6 +76,8 @@
         group: root
         mode: 0644
 
+    # Silent boot
+    # -------------------------------------------------------------------------
     - name: Restore default getty behavior, clearing TTY1
       ansible.builtin.copy:
         src: files/host/etc/systemd/system/getty@tty1.service.d/override.conf
@@ -102,6 +86,23 @@
         group: root
         mode: 0644
       notify: Daemon reload
+
+    - name: Add kernel parameters for silent boot to GRUB config
+      ansible.builtin.lineinfile:
+        state: present
+        path: /etc/default/grub
+        line: 'GRUB_CMDLINE_LINUX="quiet loglevel=3 vt.global_cursor_default=0"'
+        regexp: '^GRUB_CMDLINE_LINUX='
+      notify: Post-grubcfg message
+
+    - name: Restore cursor to TTY after boot
+      ansible.builtin.copy:
+        src: files/host/etc/issue.d/99-cursor
+        dest: /etc/issue.d/
+        owner: root
+        group: root
+        mode: 0644
+    # -------------------------------------------------------------------------
 
     - name: Desktop tasks
       when: ansible_form_factor == 'Desktop'
@@ -114,6 +115,7 @@
             group: root
             mode: 0644
             setype: udev_rules_t
+          notify: Trigger udev rules
 
         - name: Turn off suspend on AC power for GDM
           ansible.builtin.script: files/host/gsettings_gdm.sh
@@ -123,20 +125,25 @@
     - name: Laptop tasks
       when: ansible_form_factor == 'Notebook'
       block:
-        - name: Enable battery charging thresholds for ThinkPad
+        - name: Enable battery charging thresholds
           ansible.builtin.copy:
-            src: files/host/etc/systemd/system/battery-care.service
-            dest: /etc/systemd/system/
+            src: files/host/etc/udev/rules.d/battery-care.rules
+            dest: /etc/udev/rules.d/
             owner: root
             group: root
             mode: 0644
+            setype: udev_rules_t
+          notify: Trigger udev rules
 
-        - name: Start & enable battery-care service
-          ansible.builtin.systemd:
-            state: started
-            name: battery-care
-            enabled: true
-            daemon_reload: true
+        - name: Disable microphone mute LED
+          ansible.builtin.copy:
+            src: files/host/etc/udev/rules.d/micmute-led.rules
+            dest: /etc/udev/rules.d/
+            owner: root
+            group: root
+            mode: 0644
+            setype: udev_rules_t
+          notify: Trigger udev rules
 
     - name: User configuration
       become: false
@@ -169,3 +176,33 @@
           ansible.builtin.script: files/host/gsettings.sh
           register: result
           changed_when: result.stdout == "1"
+
+
+  handlers:
+    - name: Post-install message
+      ansible.builtin.debug:
+        msg: "New packages have been installed. Please reboot before continuing."
+
+    - name: Post-grubcfg message
+      ansible.builtin.debug:
+        msg: "GRUB configuration has changed. Run `transactional-update grub.cfg`."
+
+    - name: End play
+      ansible.builtin.meta: end_play
+
+    - name: Restart NetworkManager
+      ansible.builtin.service:
+        state: restarted
+        name: NetworkManager
+
+    - name: Daemon reload
+      ansible.builtin.systemd:
+        daemon_reload: true
+
+    - name: Trigger udev rules
+      ansible.builtin.command:
+        cmd: udevadm {{ item }}
+      changed_when: true
+      loop:
+        - control --reload
+        - trigger

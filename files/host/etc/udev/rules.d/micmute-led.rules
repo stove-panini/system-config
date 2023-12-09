@@ -1,0 +1,10 @@
+# Turn off mic mute LED on ThinkPad Z13 Gen 1
+#
+# NOTE: The LED stays on regardless of mute status. I don't run into this issue
+# on Fedora, though. On openSUSE, Pipewire (or Wireplumber?) chooses the device
+# "ACP/ACP3X/ACP6x Audio Coprocessor Stereo" as the input source. On Fedora,
+# "Family 17h/19h HD Audio Controller Analog Stereo" is used. I bet micmute is
+# tied to the latter, though I can't figure out how to get that device to show
+# up in GNOME Settings.
+
+KERNEL=="platform::micmute", SUBSYSTEM=="leds", ATTR{brightness}="0"
