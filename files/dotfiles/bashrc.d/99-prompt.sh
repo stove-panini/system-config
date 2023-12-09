@@ -127,7 +127,7 @@ _set_ps1() {
 # The first action must be to grab the exit code of the previous command, being
 # careful not to overwrite an existing PROMPT_COMMAND
 if [[ ${PROMPT_COMMAND[0]} != _set_ec ]]; then
-    PROMPT_COMMAND=(_set_ec "${PROMPT_COMMAND}")
+    PROMPT_COMMAND=(_set_ec "${PROMPT_COMMAND[@]}")
 fi
 
 _set_ps1
