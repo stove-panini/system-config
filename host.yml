@@ -2,6 +2,7 @@
 - name: Configure MicroOS Host
   hosts: host
   gather_facts: true
+  become: true
   handlers:
     - name: Message
       ansible.builtin.debug:
@@ -11,13 +12,11 @@
       ansible.builtin.meta: end_play
 
     - name: Restart NetworkManager
-      become: true
       ansible.builtin.service:
         state: restarted
         name: NetworkManager
 
     - name: Daemon reload
-      become: true
       ansible.builtin.systemd:
         daemon_reload: true
 
@@ -63,7 +62,6 @@
           - org.signal.Signal
 
     - name: Install OS packages
-      become: true
       community.general.zypper:
         state: present
         name: "{{ os_pkgs }}"
@@ -75,14 +73,12 @@
       ansible.builtin.meta: flush_handlers
 
     - name: Start & enable systemd-resolved
-      become: true
       ansible.builtin.service:
         state: started
         name: systemd-resolved
         enabled: true
 
     - name: Link resolv.conf to systemd-resolved's stub resolver
-      become: true
       ansible.builtin.file:
         state: link
         force: true
@@ -91,7 +87,6 @@
       notify: Restart NetworkManager
 
     - name: Enable hostname resolution in NSS via systemd-resolved
-      become: true
       ansible.builtin.copy:
         src: files/host/etc/nsswitch.conf
         dest: /etc/
@@ -100,7 +95,6 @@
         mode: 0644
 
     - name: Restore default getty behavior, clearing TTY1
-      become: true
       ansible.builtin.copy:
         src: files/host/etc/systemd/system/getty@tty1.service.d/override.conf
         dest: /etc/systemd/system/getty@tty1.service.d/
@@ -113,7 +107,6 @@
       when: ansible_form_factor == 'Desktop'
       block:
         - name: Disable builtin NIC on monitor
-          become: true
           ansible.builtin.copy:
             src: files/host/etc/udev/rules.d/viewsonic-nic.rules
             dest: /etc/udev/rules.d/
@@ -123,38 +116,56 @@
             setype: udev_rules_t
 
         - name: Turn off suspend on AC power for GDM
-          become: true
           ansible.builtin.script: files/host/gsettings_gdm.sh
           register: result
           changed_when: result.stdout == "1"
 
-    # User configuration
-    # --------------------------------------------------------------------------
-    - name: Link user dotfiles
-      ansible.builtin.file:
-        state: link
-        force: true
-        src: "{{ item.root + item.path }}"
-        path: "~/.{{ item.path }}"
-      with_community.general.filetree: "{{ playbook_dir }}/files/dotfiles/"
-      when: "'/' not in item.path"
+    - name: Laptop tasks
+      when: ansible_form_factor == 'Notebook'
+      block:
+        - name: Enable battery charging thresholds for ThinkPad
+          ansible.builtin.copy:
+            src: files/host/etc/systemd/system/battery-care.service
+            dest: /etc/systemd/system/
+            owner: root
+            group: root
+            mode: 0644
 
-    - name: Link user config dirs
-      ansible.builtin.file:
-        state: link
-        force: true
-        src: "{{ item.root + item.path }}"
-        path: "~/.config/{{ item.path }}"
-      with_community.general.filetree: "{{ playbook_dir }}/files/config/"
-      when: item.state == 'directory' and '/' not in item.path
+        - name: Start & enable battery-care service
+          ansible.builtin.systemd:
+            state: started
+            name: battery-care
+            enabled: true
+            daemon_reload: true
 
-    - name: Install flatpaks
-      community.general.flatpak:
-        state: present
-        name: "{{ flatpaks }}"
-        method: user
+    - name: User configuration
+      become: false
+      block:
+        - name: Link user dotfiles
+          ansible.builtin.file:
+            state: link
+            force: true
+            src: "{{ item.root + item.path }}"
+            path: "~/.{{ item.path }}"
+          with_community.general.filetree: "{{ playbook_dir }}/files/dotfiles/"
+          when: "'/' not in item.path"
 
-    - name: Set gsettings prefs
-      ansible.builtin.script: files/host/gsettings.sh
-      register: result
-      changed_when: result.stdout == "1"
+        - name: Link user config dirs
+          ansible.builtin.file:
+            state: link
+            force: true
+            src: "{{ item.root + item.path }}"
+            path: "~/.config/{{ item.path }}"
+          with_community.general.filetree: "{{ playbook_dir }}/files/config/"
+          when: item.state == 'directory' and '/' not in item.path
+
+        - name: Install flatpaks
+          community.general.flatpak:
+            state: present
+            name: "{{ flatpaks }}"
+            method: user
+
+        - name: Set gsettings prefs
+          ansible.builtin.script: files/host/gsettings.sh
+          register: result
+          changed_when: result.stdout == "1"

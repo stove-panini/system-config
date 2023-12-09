@@ -1,0 +1,14 @@
+[Unit]
+Description=Set battery charge thresholds
+
+[Service]
+Type=oneshot
+Environment=CCSTART=/sys/class/power_supply/BAT0/charge_control_start_threshold
+Environment=CCEND=/sys/class/power_supply/BAT0/charge_control_end_threshold
+Environment=START=75
+Environment=END=80
+ExecStart=/bin/sh -c "[ $(cat $CCSTART) -eq $START ] || echo $START >$CCSTART"
+ExecStart=/bin/sh -c "[ $(cat $CCEND) -eq $END ] || echo $END >$CCEND"
+
+[Install]
+WantedBy=multi-user.target
