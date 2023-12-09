@@ -69,7 +69,7 @@ __ps1_path() {
 
     limit=40
     pwd="$(pwd)"
-    result="~${pwd#"$HOME"}" # substitute $HOME with ~
+    result="${pwd/#$HOME/\~}" # substitute $HOME with ~
 
     # Return early if not over the character limit
     if (( ${#result} <= limit )); then
