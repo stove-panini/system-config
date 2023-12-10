@@ -70,11 +70,14 @@ __ps1_path() {
     limit=40
     result="${PWD/#$HOME/\~}" # substitute $HOME with ~
 
-    # Return early if not over the character limit
-    if (( ${#result} <= limit )); then
+    # Return early if not over the character limit or checkwinsize is not on
+    if (( ${#result} <= limit )) || [[ -z $COLUMNS ]]; then
         echo -n " [${result}]"
         return
     fi
+
+    # Redefine limit based on terminal window width
+    limit=$(( COLUMNS - 40 ))
 
     # Split path (minus current dir) into array
     IFS=/ read -ra dirparts <<<"${result}"
