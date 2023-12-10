@@ -79,7 +79,7 @@ __ps1_path() {
     # Redefine limit based on terminal window width
     limit=$(( COLUMNS - 40 ))
 
-    # Split path (minus current dir) into array
+    # Split path into array of directory names
     IFS=/ read -ra dirparts <<<"${result}"
 
     # Substitute directory names with their first letter until the length of
