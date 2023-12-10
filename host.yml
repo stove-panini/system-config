@@ -43,6 +43,14 @@
           - org.remmina.Remmina
           - org.signal.Signal
 
+    - name: Enable the status command in transactional-update
+      ansible.builtin.copy:
+        src: files/host/etc/transactional-update.conf
+        dest: /etc/
+        owner: root
+        group: root
+        mode: 0644
+
     - name: Install OS packages
       community.general.zypper:
         state: present
