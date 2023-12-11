@@ -32,4 +32,11 @@ if [[ $DISTROBOX_ENTER_PATH ]]; then
             | openssl s_client -servername "$1" -connect "${1}:443" \
             | openssl x509 -noout -dates
     }
+
+    serve() {
+        # Python's http.server dies when serving ISOs to iLO but not Ruby's :)
+
+        # Not "run" but "require un". Crazy. https://github.com/ruby/un
+        ruby -run -e httpd -- --port "${1:-8000}" .
+    }
 fi
