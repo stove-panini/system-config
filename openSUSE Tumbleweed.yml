@@ -39,6 +39,7 @@
       - ruby-devel
       - ShellCheck
       - tmux
+      - usbutils
       - wl-clipboard
       - yt-dlp
 
