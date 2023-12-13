@@ -43,7 +43,6 @@
       - vim-language-server
 
 - name: Add RPMFusion repos
-  become: true
   ansible.builtin.dnf:
     state: present
     name: "https://mirrors.rpmfusion.org/{{ item }}/fedora/\
@@ -54,7 +53,6 @@
     - nonfree
 
 - name: Add Hashicorp repo
-  become: true
   ansible.builtin.yum_repository:
     state: present
     name: hashicorp

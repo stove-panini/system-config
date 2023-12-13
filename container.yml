@@ -2,12 +2,12 @@
 - name: Configure Distrobox Container
   hosts: container
   gather_facts: true
+  become: true
   tasks:
     - name: Run tasks for this distro
       ansible.builtin.include_tasks: "{{ ansible_facts['distribution'] ~ '.yml' }}"
 
-    - name: Install OS packages
-      become: true
+    - name: Install OS packages # noqa: package-latest
       ansible.builtin.package:
         state: latest
         name: "{{ os_pkgs }}"
@@ -15,7 +15,6 @@
       diff: true
 
     - name: Install npm packages
-      become: true
       community.general.npm:
         state: "{{ 'present' if item.version is defined else 'latest' }}"
         name: "{{ item.name | default(item) }}"
@@ -25,6 +24,7 @@
       when: npm_pkgs is defined
 
     - name: Install Ruby gems
+      become: false
       community.general.gem:
         state: "{{ 'present' if item.version is defined else 'latest' }}"
         name: "{{ item.name | default(item) }}"
@@ -35,6 +35,7 @@
       when: ruby_gems is defined
 
     - name: Homebrew
+      become: false
       when: brew_pkgs is defined
       block:
         - name: Install homebrew
