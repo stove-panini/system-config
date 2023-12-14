@@ -10,11 +10,6 @@ fi
 # History options
 export HISTCONTROL='ignoreboth:erasedups'
 
-# Use per-Distrobox history files, excluding ephemeral ones
-if [[ $DISTROBOX_ENTER_PATH && $CONTAINER_ID != distrobox-* ]]; then
-    export HISTFILE="${HOME}/.bash_history-${CONTAINER_ID}"
-fi
-
 # Editor preference list
 for editor in nvim vimx vim vi nano; do
     if type $editor &>/dev/null; then
