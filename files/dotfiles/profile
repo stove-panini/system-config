@@ -10,9 +10,9 @@ fi
 # History options
 export HISTCONTROL='ignoreboth:erasedups'
 
-# Use per-distrobox history files
-if [[ $DISTROBOX_ENTER_PATH ]]; then
-    HISTFILE="${HOME}/.bash_history-${CONTAINER_ID}"
+# Use per-Distrobox history files, excluding ephemeral ones
+if [[ $DISTROBOX_ENTER_PATH && $CONTAINER_ID != distrobox-* ]]; then
+    export HISTFILE="${HOME}/.bash_history-${CONTAINER_ID}"
 fi
 
 # Editor preference list
