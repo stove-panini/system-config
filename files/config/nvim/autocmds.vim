@@ -10,7 +10,7 @@ augroup FtOverrides
   autocmd!
   autocmd FileType sh                set tabstop=4 shiftwidth=4
   autocmd FileType ruby,yaml,vim,lua set tabstop=2 shiftwidth=2
-  autocmd FileType markdown,mkd,text set wrap
+  autocmd FileType markdown,mkd,text set wrap linebreak
   autocmd FileType markdown,mkd      set conceallevel=2
 augroup END
 
