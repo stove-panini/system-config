@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+if [[ ! $DISTROBOX_ENTER_PATH ]]; then
+    echo "Only run this from inside a Distrobox!" >&2
+    exit 1
+fi
+
 case $1 in
     --host)
         opts=(-Kk)
