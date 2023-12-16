@@ -28,9 +28,9 @@ pm_cmds=(
 )
 
 for i in "${!pm_cmds[@]}"; do
-    if command -v "$i" &>/dev/null; then
+    if type "$i" &>/dev/null; then
         sudo ${pm_cmds[$i]} ansible sshpass
-    break
+        break
     fi
 done
 
