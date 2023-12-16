@@ -19,17 +19,17 @@ case $1 in
         exit
 esac
 
-declare -A pm_cmds
-pm_cmds=(
+declare -A pkg_cmds
+pkg_cmds=(
     [apt]="apt update && apt install -y"
     [dnf]="dnf install -y"
     [pacman]="pacman --noconfirm -S"
     [zypper]="zypper install -y"
 )
 
-for i in "${!pm_cmds[@]}"; do
+for i in "${!pkg_cmds[@]}"; do
     if type "$i" &>/dev/null; then
-        sudo ${pm_cmds[$i]} ansible sshpass
+        sudo ${pkg_cmds[$i]} ansible sshpass
         break
     fi
 done
