@@ -8,23 +8,23 @@ fi
 case $1 in
     --host)
         opts=(-Kk)
-        playbook=host.yml
+        playbook=Silverblue.yml
         ;;
     '')
         opts=()
-        playbook=container.yml
+        playbook=Toolbox.yml
         ;;
     *)
-        echo "Run with --host to configure MicroOS"
+        echo "Run with --host to configure Silverblue host"
         exit
 esac
 
 declare -A pkg_cmds
 pkg_cmds=(
+    [apk]="apk update && apk add"
     [apt]="apt update && apt install -y"
     [dnf]="dnf install -y"
     [pacman]="pacman --noconfirm -S"
-    [zypper]="zypper install -y"
 )
 
 for i in "${!pkg_cmds[@]}"; do

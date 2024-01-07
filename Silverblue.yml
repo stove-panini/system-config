@@ -1,0 +1,129 @@
+---
+- name: Configure Silverblue Host
+  hosts: host
+  gather_facts: true
+  become: true
+  tasks:
+    - name: Set Silverblue package lists
+      ansible.builtin.set_fact:
+        os_pkgs: []
+
+        flatpaks:
+          - ca.desrt.dconf-editor
+          - com.bitwarden.desktop
+          - com.github.IsmaelMartinez.teams_for_linux
+          - com.github.tchx84.Flatseal
+          - com.mattjakeman.ExtensionManager
+          - com.slack.Slack
+          - com.vixalien.sticky
+          - de.haeckerfelix.Fragments
+          - io.github.celluloid_player.Celluloid
+          - org.chromium.Chromium
+          - org.gimp.GIMP
+          - org.gnome.Aisleriot
+          - org.gnome.Boxes
+          - org.gnome.Calculator
+          - org.gnome.Calendar
+          - org.gnome.Characters
+          - org.gnome.DejaDup
+          - org.gnome.Evince
+          - org.gnome.FileRoller
+          - org.gnome.Firmware
+          - org.gnome.Logs
+          - org.gnome.Loupe
+          - org.gnome.Mahjongg
+          - org.gnome.NautilusPreviewer
+          - org.gnome.Snapshot
+          - org.gnome.TextEditor
+          - org.gnome.Weather
+          - org.gnome.baobab
+          - org.gnome.clocks
+          - org.mozilla.firefox
+          - org.remmina.Remmina
+          - org.signal.Signal
+
+    - name: Remove fedora flatpak remote
+      community.general.flatpak_remote:
+        state: absent
+        name: fedora
+
+    - name: Install flatpaks
+      community.general.flatpak:
+        state: present
+        name: "{{ flatpaks }}"
+
+    - name: Desktop tasks
+      when: ansible_form_factor == 'Desktop'
+      block:
+        - name: Disable builtin NIC on monitor
+          ansible.builtin.copy:
+            src: files/host/etc/udev/rules.d/viewsonic-nic.rules
+            dest: /etc/udev/rules.d/
+            owner: root
+            group: root
+            mode: 0644
+            setype: udev_rules_t
+          notify: Trigger udev rules
+
+        - name: Turn off suspend on AC power for GDM
+          ansible.builtin.script: files/host/gsettings_gdm.sh
+          register: result
+          changed_when: result.stdout == "1"
+
+    - name: Laptop tasks
+      when: ansible_form_factor == 'Notebook'
+      block:
+        - name: Enable battery charging thresholds
+          ansible.builtin.copy:
+            src: files/host/etc/udev/rules.d/battery-care.rules
+            dest: /etc/udev/rules.d/
+            owner: root
+            group: root
+            mode: 0644
+            setype: udev_rules_t
+          notify: Trigger udev rules
+
+    - name: User configuration
+      become: false
+      block:
+        - name: Link user dotfiles
+          ansible.builtin.file:
+            state: link
+            force: true
+            src: "{{ item.root + item.path }}"
+            path: "~/.{{ item.path }}"
+          with_community.general.filetree: "{{ playbook_dir }}/files/dotfiles/"
+          when: "'/' not in item.path"
+
+        - name: Link user config dirs
+          ansible.builtin.file:
+            state: link
+            force: true
+            src: "{{ item.root + item.path }}"
+            path: "~/.config/{{ item.path }}"
+          with_community.general.filetree: "{{ playbook_dir }}/files/config/"
+          when: item.state == 'directory' and '/' not in item.path
+
+        - name: Hide some system apps
+          ansible.builtin.copy:
+            src: files/host/hidden.desktop
+            dest: ~/.local/share/applications/{{ item }}.desktop
+            mode: 0644
+          loop:
+            - firefox
+            - org.gnome.Tour
+
+        - name: Set gsettings prefs
+          ansible.builtin.script: files/host/gsettings.sh
+          register: result
+          changed_when: result.stdout == "1"
+
+
+  handlers:
+    - name: Trigger udev rules
+      ansible.builtin.command:
+        cmd: udevadm {{ item }}
+      changed_when: true
+      loop:
+        - control --reload
+        - trigger

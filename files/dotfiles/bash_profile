@@ -1,5 +1,5 @@
 #
-# ~/.profile
+# ~/.bash_profile
 #
 
 # Source user bashrc
@@ -9,6 +9,13 @@ fi
 
 # History options
 export HISTCONTROL='ignoreboth:erasedups'
+
+# Use per-toolbox history files
+if [[ $TOOLBOX_PATH ]]; then
+    source /run/.containerenv
+    export TOOLBOX_NAME="$name" # Used later in PS1
+    HISTFILE="${HOME}/.bash_history.${TOOLBOX_NAME}"
+fi
 
 # Editor preference list
 for editor in nvim vimx vim vi nano; do
@@ -47,26 +54,7 @@ if [[ -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
     unset brew_completion_script
 fi
 
-# FZF completion syntax & keybinds
-fzf_configs=(
-    # Arch
-    /usr/share/fzf/completion.bash
-    /usr/share/fzf/key-bindings.bash
-
-    # Debian
-    /usr/share/bash-completion/completions/fzf
-    /usr/share/doc/fzf/examples/key-bindings.bash
-
-    # Fedora
-    /usr/share/fzf/shell/key-bindings.bash
-
-    # openSUSE
-    /usr/share/bash-completion/completions/fzf
-    /usr/share/bash-completion/completions/fzf-key-bindings
-)
-
-for file in "${fzf_configs[@]}"; do
-    [[ -f "$file" ]] && source "$file"
-done
-
-unset fzf_configs file
+# FZF key bindings (Fedora)
+if [[ -f /usr/share/fzf/shell/key-bindings.bash ]]; then
+    source /usr/share/fzf/shell/key-bindings.bash
+fi

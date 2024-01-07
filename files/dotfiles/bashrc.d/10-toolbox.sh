@@ -1,12 +1,5 @@
-# Configs for Distrobox
-if [[ $DISTROBOX_ENTER_PATH ]]; then
-
-    # Use per-Distrobox history files, excluding ephemeral ones
-    if [[ $CONTAINER_ID == distrobox-* ]]; then
-        export HISTFILE=/dev/null
-    else
-        export HISTFILE="${HOME}/.bash_history-${CONTAINER_ID}"
-    fi
+# Configs for Toolbox
+if [[ $TOOLBOX_PATH ]]; then
 
     # Set prompt theme
     declare -A PROMPT_THEME

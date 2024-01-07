@@ -58,9 +58,18 @@ __ps1_git() {
     echo -n " [${result}]"
 }
 
-__ps1_dbox_ssh_hostname() {
-    if [[ $DISTROBOX_ENTER_PATH && $SSH_TTY ]]; then
-        echo -n ".${HOSTNAME#*.}"
+__ps1_hostname() {
+    # TOOLBOX_NAME is set in bash_profile
+    if [[ $TOOLBOX_NAME ]]; then
+        echo -n "@${TOOLBOX_NAME}"
+    else
+        echo -n "@${HOSTNAME%%.*}"
+    fi
+}
+
+__ps1_toolbox_ssh_hostname() {
+    if [[ $TOOLBOX_NAME && $XDG_SESSION_TYPE == "tty" ]]; then
+        echo -n ".$(cat /run/host/etc/hostname)"
     fi
 }
 
@@ -106,7 +115,7 @@ _set_ps1() {
     # Default colors
     local user="${PROMPT_THEME[user]:-bright_blue}"
     local host="${PROMPT_THEME[host]:-blue}"
-    local dbsh="${PROMPT_THEME[dbsh]:-cyan}"
+    local tbhn="${PROMPT_THEME[tbhn]:-cyan}"
     local path="${PROMPT_THEME[path]:-white}"
     local icon="${PROMPT_THEME[icon]:-white}"
     local git="${PROMPT_THEME[git]:-yellow}"
@@ -116,8 +125,8 @@ _set_ps1() {
 
     # Single-quoted when we want the function *call*, not its result
     PS1+="$(__ps1_color "$user")\u"
-    PS1+="$(__ps1_color "$host")@\h"
-    PS1+="$(__ps1_color "$dbsh")"'$(__ps1_dbox_ssh_hostname)'
+    PS1+="$(__ps1_color "$host")"'$(__ps1_hostname)'
+    PS1+="$(__ps1_color "$tbhn")"'$(__ps1_toolbox_ssh_hostname)'
     PS1+="$(__ps1_color "$path")"'$(__ps1_path)'
     PS1+="$(__ps1_color "$git")"'$(__ps1_git)'
     PS1+="$(__ps1_color "$ec")"'$(__ps1_ec)'
