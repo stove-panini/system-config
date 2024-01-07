@@ -23,13 +23,6 @@ settings=(
     [org.gnome.desktop.interface/clock-show-weekday]="true"
     [org.gnome.desktop.interface/show-battery-percentage]="false"
 
-    # Nautilus / file-chooser
-    [org.gnome.nautilus.icon-view/default-zoom-level]="'small'"
-    [org.gnome.nautilus.list-view/default-zoom-level]="'small'"
-    [org.gnome.nautilus.preferences/default-folder-viewer]="'list-view'"
-    [org.gtk.Settings.FileChooser/sort-directories-first]="true"
-    [org.gtk.gtk4.Settings.FileChooser/sort-directories-first]="true"
-
     # Workspace navigation
     [org.gnome.desktop.wm.keybindings/move-to-workspace-1]="['<Shift><Super>1']"
     [org.gnome.desktop.wm.keybindings/move-to-workspace-2]="['<Shift><Super>2']"
@@ -53,7 +46,25 @@ settings=(
 
     # Swap capslock & ctrl, map compose key to right alt
     [org.gnome.desktop.input-sources/xkb-options]="['caps:ctrl_modifier', 'compose:ralt', 'lv3:switch']"
+
+    # Search providers
+    [org.gnome.desktop.search-providers/enabled]="['org.gnome.Calculator.desktop', 'org.gnome.Characters.desktop']"
+    [org.gnome.desktop.search-providers/sort-order]="['org.gnome.Contacts.desktop', 'org.gnome.Documents.desktop', 'org.gnome.Nautilus.desktop']"
+
+    # Screen timeout (5 mins)
+    [org.gnome.desktop.session/idle-delay]="uint32 600"
+
+    # No event sounds
+    [org.gnome.desktop.sound/event-sounds]="false"
+
+    # Nautilus / file-chooser
+    [org.gnome.nautilus.icon-view/default-zoom-level]="'small'"
+    [org.gnome.nautilus.list-view/default-zoom-level]="'small'"
+    [org.gnome.nautilus.preferences/default-folder-viewer]="'list-view'"
+    [org.gtk.Settings.FileChooser/sort-directories-first]="true"
+    [org.gtk.gtk4.Settings.FileChooser/sort-directories-first]="true"
 )
+
 
 custom_keybindings=(
     [0/binding]="'<Super><Shift>Return'"
@@ -61,8 +72,8 @@ custom_keybindings=(
     [0/name]="'Launch Terminal (Host)'"
 
     [1/binding]="'<Super>Return'"
-    [1/command]="'gnome-terminal --profile Distrobox'"
-    [1/name]="'Launch Terminal (Distrobox)'"
+    [1/command]="'gnome-terminal --profile Toolbox'"
+    [1/name]="'Launch Terminal (Toolbox)'"
 )
 
 # =============================================================================

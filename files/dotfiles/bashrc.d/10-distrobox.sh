@@ -1,5 +1,5 @@
-# Configs for Distrobox
-if [[ $DISTROBOX_ENTER_PATH ]]; then
+# Configs for Toolbox
+if [[ $TOOLBOX_PATH ]]; then
     declare -A PROMPT_THEME
     export PROMPT_THEME=([user]='bright_green' [host]='green')
 

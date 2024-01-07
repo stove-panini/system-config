@@ -1,8 +1,7 @@
-# Aliases for MicroOS host environment
-if [[ ! $DISTROBOX_ENTER_PATH ]]; then
+# Aliases for Silverblue host environment
+if [[ ! $TOOLBOX_PATH ]]; then
 
-    alias tu='sudo transactional-update'
-    alias de='distrobox enter'
+    alias te='toolbox enter'
 
     declare -A PROMPT_THEME
     if [[ $SSH_CONNECTION ]]; then
