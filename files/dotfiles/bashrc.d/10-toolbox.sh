@@ -1,5 +1,7 @@
 # Configs for Toolbox
 if [[ $TOOLBOX_PATH ]]; then
+
+    # Set prompt theme
     declare -A PROMPT_THEME
     export PROMPT_THEME=([user]='bright_green' [host]='green')
 
