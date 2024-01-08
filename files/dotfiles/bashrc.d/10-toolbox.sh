@@ -1,44 +1,43 @@
 # Configs for Toolbox
-if [[ $TOOLBOX_PATH ]]; then
+[[ $TOOLBOX_PATH ]] || return
 
-    # Set prompt theme
-    declare -A PROMPT_THEME
-    export PROMPT_THEME=([user]='bright_green' [host]='green')
+# Set prompt theme
+declare -A PROMPT_THEME
+export PROMPT_THEME=([user]='bright_green' [host]='green')
 
-    alias k='kubectl'
-    alias vim='nvim'
-    alias vimdiff='nvim -d'
+alias k='kubectl'
+alias vim='nvim'
+alias vimdiff='nvim -d'
 
-    alias gc='git checkout'
-    alias gC='git commit'
-    alias gs='git status'
-    alias gd='git diff'
-    alias gp='git pull'
-    alias gP='git push'
+alias gc='git checkout'
+alias gC='git commit'
+alias gs='git status'
+alias gd='git diff'
+alias gp='git pull'
+alias gP='git push'
 
-    gH() {
-        # H like uh... git home?
-        # Switches to main branch and deletes local branches that've been merged
-        local main_branch
-        main_branch=$(basename "$(git rev-parse --abbrev-ref origin/HEAD)")
+gH() {
+    # H like uh... git home?
+    # Switches to main branch and deletes local branches that've been merged
+    local main_branch
+    main_branch=$(basename "$(git rev-parse --abbrev-ref origin/HEAD)")
 
-        git checkout "$main_branch"
-        git pull
-        git branch --merged \
-            | grep -v -e '^\*' -e "$main_branch" \
-            | xargs git branch -d
-    }
+    git checkout "$main_branch"
+    git pull
+    git branch --merged \
+        | grep -v -e '^\*' -e "$main_branch" \
+        | xargs git branch -d
+}
 
-    certinfo() {
-        echo -n Q \
-            | openssl s_client -servername "$1" -connect "${1}:443" \
-            | openssl x509 -noout -dates
-    }
+certinfo() {
+    echo -n Q \
+        | openssl s_client -servername "$1" -connect "${1}:443" \
+        | openssl x509 -noout -dates
+}
 
-    serve() {
-        # Python's http.server dies when serving ISOs to iLO but not Ruby's :)
+serve() {
+    # Python's http.server dies when serving ISOs to iLO but not Ruby's :)
 
-        # Not "run" but "require un". Crazy. https://github.com/ruby/un
-        ruby -run -e httpd -- --port "${1:-8000}" .
-    }
-fi
+    # Not "run" but "require un". Crazy. https://github.com/ruby/un
+    ruby -run -e httpd -- --port "${1:-8000}" .
+}
