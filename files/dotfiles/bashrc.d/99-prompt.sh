@@ -135,10 +135,8 @@ _set_ps1() {
     PS1+="$(__ps1_color reset)"
 }
 
-# Steal Red Hat's default PROMPT_COMMAND
 if [[ -z $PROMPT_COMMAND ]]; then
-    # shellcheck disable=SC2016
-    PROMPT_COMMAND=(_set_ec 'printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"')
+    PROMPT_COMMAND=(_set_ec)
 fi
 
 # Preserve existing PROMPT_COMMAND
