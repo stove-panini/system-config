@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-if [[ ! $DISTROBOX_ENTER_PATH ]]; then
-    echo "Only run this from inside a Distrobox!" >&2
+if [[ ! $TOOLBOX_PATH ]]; then
+    echo "Only run this from inside a Toolbox!" >&2
     exit 1
 fi
 
