@@ -29,6 +29,7 @@ pkg_cmds=(
 
 for i in "${!pkg_cmds[@]}"; do
     if type "$i" &>/dev/null; then
+        # shellcheck disable=SC2086
         sudo ${pkg_cmds[$i]} ansible sshpass
         break
     fi
