@@ -58,3 +58,6 @@ fi
 if [[ -f /usr/share/fzf/shell/key-bindings.bash ]]; then
     source /usr/share/fzf/shell/key-bindings.bash
 fi
+
+# Home bin dir
+export PATH="$HOME/.local/bin:$PATH"
