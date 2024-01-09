@@ -29,13 +29,13 @@ nnoremap <silent> <leader>T :call user#Term('new')<CR>
 " Return to normal mode in terminal with Esc
 tnoremap <Esc> <C-\><C-n>
 
-" LSP
-nnoremap <silent> <leader>e :lua vim.diagnostic.open_float()<CR>
+" Linter messages
+nnoremap <silent> <Tab>     :lua vim.diagnostic.open_float()<CR>
 nnoremap <silent> [d        :lua vim.diagnostic.goto_prev()<CR>
 nnoremap <silent> ]d        :lua vim.diagnostic.goto_next()<CR>
-nnoremap <silent> <leader>q :lua vim.diagnostic.setloclist()<CR>
+nnoremap <silent> <leader>l :lua vim.diagnostic.setloclist()<CR>
 
-" Only map these when a language server is available
+" Only map LSP keybinds when a language server is available
 augroup LocalLSP
   autocmd!
   autocmd LspAttach *
