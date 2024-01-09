@@ -3,7 +3,7 @@ let s:vim_plug_filepath = stdpath('data') . '/site/autoload/plug.vim'
 
 if empty(glob(s:vim_plug_filepath))
   silent execute '!curl -fLo ' . s:vim_plug_filepath . ' --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+  autocmd VimEnter * PlugInstall --sync | q | source $MYVIMRC
 endif
 
 " Plugin List
