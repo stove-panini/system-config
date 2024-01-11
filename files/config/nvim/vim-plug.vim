@@ -31,9 +31,6 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
 
-" syntax
-Plug 'sheerun/vim-polyglot'
-
 call plug#end()
 " -----------------------------------------------------------------------------
 
