@@ -38,7 +38,10 @@ call plug#end()
 " -----------------------------------------------------------------------------
 
 " Open vim-plug in a floating window
-let g:plug_window = 'call user#FloatWin(30, 70)'
+let g:plug_window = 'call user#FloatWin(50, 70)'
+
+" Close vim-plug window with Esc
+autocmd! FileType vim-plug nnoremap <buffer> <silent> <Esc> :q<CR>
 
 " Read plugin configs
 runtime! plugins/*.vim plugins/*.lua
