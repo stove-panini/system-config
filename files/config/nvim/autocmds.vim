@@ -8,10 +8,10 @@ augroup END
 " $VIMRUNTIME/after/ftplugin/<filetype>.vim, but is it really worth it?
 augroup FtOverrides
   autocmd!
-  autocmd FileType sh                set tabstop=4 shiftwidth=4
-  autocmd FileType ruby,yaml,vim,lua set tabstop=2 shiftwidth=2
-  autocmd FileType markdown,mkd,text set wrap linebreak
-  autocmd FileType markdown,mkd      set conceallevel=2
+  autocmd FileType sh                setlocal tabstop=4 shiftwidth=4
+  autocmd FileType ruby,yaml,vim,lua setlocal tabstop=2 shiftwidth=2
+  autocmd FileType markdown,mkd,text setlocal wrap linebreak
+  autocmd FileType markdown,mkd      setlocal conceallevel=2
 augroup END
 
 augroup Terminal
