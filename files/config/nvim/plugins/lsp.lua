@@ -6,7 +6,8 @@ local servers = {
   'gopls',
   'pylsp',
   'terraformls',
-  'vimls'
+  'vimls',
+  'yamlls'
 }
 
 -- Autocompletion

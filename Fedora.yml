@@ -41,6 +41,7 @@
       - "@ansible/ansible-language-server"
       - bash-language-server
       - vim-language-server
+      - yaml-language-server
 
 - name: Add RPMFusion repos
   ansible.builtin.dnf:
