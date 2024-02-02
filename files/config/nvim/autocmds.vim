@@ -14,6 +14,14 @@ augroup FtOverrides
   autocmd FileType markdown,mkd      setlocal conceallevel=2
 augroup END
 
+" This could also go in ftdetect/user.vim but I like it in one file
+augroup FtDetect
+  autocmd!
+  autocmd BufNewFile,BufRead */ansible/*/[^.]*.yml set filetype=yaml.ansible
+  autocmd BufNewFile,BufRead */ansible/*/hosts     set filetype=ansible_hosts
+  autocmd BufNewFile,BufRead */manifests/*.pp      set filetype=puppet
+augroup END
+
 augroup Terminal
   autocmd!
   autocmd TermOpen,BufEnter term://* startinsert
