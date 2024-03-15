@@ -17,7 +17,7 @@
 
 [user]
   name = stove-panini
-  email = stephen@trashnet.xyz
+  email = stephen@undo.land
   signingkey = ~/.ssh/id_ed25519
 
 [gpg]
