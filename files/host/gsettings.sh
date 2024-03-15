@@ -51,9 +51,6 @@ settings=(
     [org.gnome.desktop.search-providers/enabled]="['org.gnome.Calculator.desktop', 'org.gnome.Characters.desktop']"
     [org.gnome.desktop.search-providers/sort-order]="['org.gnome.Contacts.desktop', 'org.gnome.Documents.desktop', 'org.gnome.Nautilus.desktop']"
 
-    # Screen timeout (5 mins)
-    [org.gnome.desktop.session/idle-delay]="uint32 600"
-
     # No event sounds
     [org.gnome.desktop.sound/event-sounds]="false"
 
