@@ -1,6 +1,13 @@
 # Configs for Toolbox
 [[ $TOOLBOX_PATH ]] || return
 
+# Use per-toolbox history files
+if [[ $TOOLBOX_PATH ]]; then
+    source /run/.containerenv
+    export TOOLBOX_NAME="$name" # Used later in PS1
+    HISTFILE="${HOME}/.bash_history.${TOOLBOX_NAME}"
+fi
+
 # Set prompt theme
 declare -A PROMPT_THEME
 export PROMPT_THEME=([user]='bright_green' [host]='green')

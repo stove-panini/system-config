@@ -10,13 +10,6 @@ fi
 # History options
 export HISTCONTROL='ignoreboth:erasedups'
 
-# Use per-toolbox history files
-if [[ $TOOLBOX_PATH ]]; then
-    source /run/.containerenv
-    export TOOLBOX_NAME="$name" # Used later in PS1
-    HISTFILE="${HOME}/.bash_history.${TOOLBOX_NAME}"
-fi
-
 # Editor preference list
 for editor in nvim vimx vim vi nano; do
     if type $editor &>/dev/null; then
