@@ -2,6 +2,8 @@ augroup Formatting
   autocmd!
   autocmd BufWritePre * call user#TrimWhitespace(1)
   autocmd BufWritePre * lua vim.lsp.buf.format()
+
+  autocmd BufWritePost *.pkr.hcl,*.pkrvars.hcl call user#ExtCmd("packer fmt")
 augroup END
 
 " Instead of an augroup, these could go into individual files at

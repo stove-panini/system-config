@@ -60,3 +60,9 @@ function! user#FzfHere()
   let l:here=expand('%:p:h')
   silent execute 'FZF' l:here
 endfunction
+
+" Runs an arbitrary shell command against the current file.
+" Use with 'autocmd BufWritePost' to act as an ad-hoc formatter.
+function! user#ExtCmd(cmd) abort
+  silent! execute '!' . a:cmd . ' %'
+endfunction
