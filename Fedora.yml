@@ -9,6 +9,7 @@
       - file
       - ffmpeg
       - fzf
+      - gettext
       - golang
       - golang-x-tools-gopls
       - helm
@@ -20,6 +21,7 @@
       - nmap
       - npm
       - openssl
+      - packer-1.10.3
       - pciutils
       - pinentry
       - python3-ansible-lint
@@ -31,7 +33,7 @@
       - rubygem-jekyll
       - rubygem-puppet-lint
       - ShellCheck
-      - terraform
+      - terraform-1.6.6
       - terraform-ls
       - tmux
       - usbutils
