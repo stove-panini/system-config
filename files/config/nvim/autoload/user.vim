@@ -1,17 +1,3 @@
-" Opens a terminal in a given split direction, starting in the directory of
-" the file in the current window.
-function! user#Term(splitcmd='new') abort
-  if assert_match('^v\?new$', a:splitcmd) != 0
-    echoerr v:errors
-    return
-  endif
-
-  let l:pwd=expand('%:p:h')
-  execute a:splitcmd
-  call termopen([&shell], {'cwd': l:pwd})
-endfunction
-
-
 " Trims whitespace at the end of lines and, optionally, blank lines at the end
 " of the file.
 function! user#TrimWhitespace(trim_eof_lines=0) abort

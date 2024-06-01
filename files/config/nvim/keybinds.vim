@@ -32,8 +32,8 @@ nnoremap <silent> <leader><C-r> :source $MYVIMRC \| echo 'Reloaded' $MYVIMRC<CR>
 nnoremap ; :
 
 " Open terminal in a split
-nnoremap <silent> <leader>t :call user#Term('vnew')<CR>
-nnoremap <silent> <leader>T :call user#Term('new')<CR>
+nnoremap <silent> <leader>t :vnew term://%:p:h//bash<CR>
+nnoremap <silent> <leader>T :new term://%:p:h//bash<CR>
 
 " Return to normal mode in terminal with Esc
 tnoremap <Esc> <C-\><C-n>
