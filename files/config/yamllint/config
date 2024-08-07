@@ -1,8 +1,0 @@
----
-# vi: set ft=yaml
-# ref: https://yamllint.readthedocs.io/en/stable/configuration.html
-extends: relaxed
-
-rules:
-  line-length:
-    max: 120

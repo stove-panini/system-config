@@ -32,7 +32,7 @@ Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
 
 " syntax
-Plug 'sheerun/vim-polyglot'
+" Plug 'sheerun/vim-polyglot'
 call plug#end()
 " -----------------------------------------------------------------------------
 
