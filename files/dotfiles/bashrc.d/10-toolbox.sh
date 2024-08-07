@@ -27,13 +27,18 @@ gH() {
     # H like uh... git home?
     # Switches to main branch and deletes local branches that've been merged
     local main_branch
+    local -a branches
     main_branch=$(basename "$(git rev-parse --abbrev-ref origin/HEAD)")
 
     git checkout "$main_branch"
     git pull
-    git branch --merged \
-        | grep -v -e '^\*' -e "$main_branch" \
-        | xargs git branch -d
+
+    readarray -t branches < <(git branch --merged | grep -v -e '^\*' -e "$main_branch")
+
+    for branch in "${branches[@]}"; do
+        # Trim leading spaces from branch name and delete it
+        git branch -d "${branch#  }"
+    done
 }
 
 certinfo() {
