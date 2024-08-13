@@ -47,9 +47,19 @@ if [[ -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
     unset brew_completion_script
 fi
 
-# FZF key bindings (Fedora)
-if [[ -f /usr/share/fzf/shell/key-bindings.bash ]]; then
-    source /usr/share/fzf/shell/key-bindings.bash
+# FZF
+if type fzf &>/dev/null; then
+    eval "$(fzf --bash)"
+
+    fd_opts='--strip-cwd-prefix --hidden --follow'
+    fd_excludes="--exclude .local/share/containers --exclude .var/app --exclude .git --exclude .terraform --exclude .ansible"
+
+    export FZF_DEFAULT_COMMAND="fd --type f $fd_opts $fd_excludes"
+    export FZF_ALT_C_COMMAND="fd --type d $fd_opts $fd_excludes"
+    export FZF_ALT_C_OPTS="--preview 'tree -C {}'"
+    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+
+    unset fd_opts fd_excludes
 fi
 
 # Home bin dir

@@ -6,6 +6,7 @@
       - awscli
       - bash-completion
       - bind-utils
+      - fd-find
       - file
       - ffmpeg
       - fzf
