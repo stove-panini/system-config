@@ -32,7 +32,8 @@ Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
 
 " syntax
-" Plug 'sheerun/vim-polyglot'
+Plug 'HiPhish/jinja.vim'
+
 call plug#end()
 " -----------------------------------------------------------------------------
 
