@@ -7,7 +7,6 @@ nnoremap <silent> <leader>O :FZF ~/Projects<CR>
 nnoremap <silent> <leader><A-o> :call user#FzfHere()<CR>
 
 nnoremap <silent> <leader>f :Rg<CR>
-nnoremap <silent> <leader>F :Rg ~/Projects<CR>
 
 let g:fzf_action = {
 \ 'ctrl-t': 'tab split',
