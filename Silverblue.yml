@@ -61,7 +61,7 @@
             dest: /etc/udev/rules.d/
             owner: root
             group: root
-            mode: 0644
+            mode: "644"
             setype: udev_rules_t
           notify: Trigger udev rules
 
@@ -79,7 +79,7 @@
             dest: /etc/udev/rules.d/
             owner: root
             group: root
-            mode: 0644
+            mode: "644"
             setype: udev_rules_t
           notify: Trigger udev rules
 
@@ -93,7 +93,7 @@
             src: "{{ item.root + item.path }}"
             path: "~/.{{ item.path }}"
           with_community.general.filetree: "{{ playbook_dir }}/files/dotfiles/"
-          when: "'/' not in item.path"
+          when: "'/' not in item.path" # no recursion-- top level items only
 
         - name: Link user config dirs
           ansible.builtin.file:
@@ -108,7 +108,7 @@
           ansible.builtin.copy:
             src: files/host/hidden.desktop
             dest: ~/.local/share/applications/{{ item }}.desktop
-            mode: 0644
+            mode: "644"
           loop:
             - firefox
             - org.gnome.Tour
