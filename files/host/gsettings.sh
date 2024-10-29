@@ -64,13 +64,14 @@ settings=(
 
 
 custom_keybindings=(
-    [0/binding]="'<Super><Shift>Return'"
-    [0/command]="'gnome-terminal --profile Host'"
-    [0/name]="'Launch Terminal (Host)'"
+    # TODO: This sucks until I configure all of ptyxis via dconf
+    #[0/binding]="'<Super><Shift>Return'"
+    #[0/command]="'ptyxis --new-window --tab-with-profile=bff42809de459e1200327bb067211417'"
+    #[0/name]="'Launch Terminal (Host)'"
 
-    [1/binding]="'<Super>Return'"
-    [1/command]="'gnome-terminal --profile Toolbox'"
-    [1/name]="'Launch Terminal (Toolbox)'"
+    #[1/binding]="'<Super>Return'"
+    #[1/command]="'ptyxis --new-window --tab-with-profile=fcc3906e32e9857075f8886f67211788'"
+    #[1/name]="'Launch Terminal (Toolbox)'"
 )
 
 # =============================================================================
