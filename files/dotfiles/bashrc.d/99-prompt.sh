@@ -59,7 +59,7 @@ __ps1_git() {
 }
 
 __ps1_hostname() {
-    # TOOLBOX_NAME is set in bash_profile
+    # TOOLBOX_NAME is set in ~/.bashrc.d/10-toolbox.sh
     if [[ $TOOLBOX_NAME ]]; then
         echo -n "@${TOOLBOX_NAME}"
     else
