@@ -131,7 +131,7 @@ _set_ps1() {
     PS1+="$(__ps1_color "$git")"'$(__ps1_git)'
     PS1+="$(__ps1_color "$ec")"'$(__ps1_ec)'
     PS1+="\n"
-    PS1+="$(__ps1_color "$icon")> "
+    PS1+="$(__ps1_color "$icon")$ "
     PS1+="$(__ps1_color reset)"
 }
 
