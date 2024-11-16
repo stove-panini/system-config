@@ -61,8 +61,7 @@
     state: present
     name: hashicorp
     description: Hashicorp Stable - $basearch
-    # baseurl: https://rpm.releases.hashicorp.com/fedora/$releasever/$basearch/stable
-    baseurl: https://rpm.releases.hashicorp.com/fedora/40/$basearch/stable
+    baseurl: https://rpm.releases.hashicorp.com/fedora/$releasever/$basearch/stable
     enabled: true
     gpgcheck: true
     gpgkey: https://rpm.releases.hashicorp.com/gpg
