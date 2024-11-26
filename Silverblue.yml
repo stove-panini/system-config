@@ -110,8 +110,13 @@
             dest: ~/.local/share/applications/{{ item }}.desktop
             mode: "644"
           loop:
-            - firefox
             - org.gnome.Tour
+
+        - name: Link firefox desktop file to the flatpak version
+          ansible.builtin.file:
+            state: link
+            src: /var/lib/flatpak/app/org.mozilla.firefox/current/active/export/share/applications/org.mozilla.firefox.desktop
+            dest: ~/.local/share/applications/org.mozilla.firefox.desktop
 
         - name: Set gsettings prefs
           ansible.builtin.script: files/host/gsettings.sh
