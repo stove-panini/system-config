@@ -11,10 +11,8 @@ local servers = {
 }
 
 -- Enable language servers w/ additional capabilities from cmp
-local capabilities = require('cmp_nvim_lsp').default_capabilities()
-
 for _, server in ipairs(servers) do
   require('lspconfig')[server].setup {
-    capabilities = capabilities
+    capabilities = require('cmp_nvim_lsp').default_capabilities()
   }
 end

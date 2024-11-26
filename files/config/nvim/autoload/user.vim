@@ -41,12 +41,6 @@ function! user#FloatWin(width=50, height=50) abort
   call nvim_win_set_option(l:win, 'winhighlight', 'Normal:Normal')
 endfunction
 
-" Opens FZF starting in the directory of the current file
-function! user#FzfHere()
-  let l:here=expand('%:p:h')
-  silent execute 'FZF' l:here
-endfunction
-
 " Runs an arbitrary shell command against the current file.
 " Use with 'autocmd BufWritePost' to act as an ad-hoc formatter.
 function! user#ExtCmd(cmd) abort
