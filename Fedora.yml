@@ -50,7 +50,7 @@
   ansible.builtin.dnf:
     state: present
     name: "https://mirrors.rpmfusion.org/{{ item }}/fedora/\
-             rpmfusion-{{ item }}-release-{{ ansible_distribution_major_version }}.noarch.rpm"
+      rpmfusion-{{ item }}-release-{{ ansible_distribution_major_version }}.noarch.rpm"
     disable_gpg_check: true
   loop:
     - free
