@@ -2,9 +2,9 @@
 local servers = {
   'ansiblels',
   'bashls',
-  --'golangci_lint_ls',
   'gopls',
   'pylsp',
+  'rust_analyzer',
   'terraformls',
   'vimls',
   'yamlls'
