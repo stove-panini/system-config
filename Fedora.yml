@@ -2,43 +2,61 @@
 - name: Set Fedora package lists
   ansible.builtin.set_fact:
     os_pkgs:
-      - ansible
-      - awscli
+      # Utils
       - bash-completion
       - bind-utils
-      - fd-find
       - file
-      - ffmpeg
-      - fzf
       - gettext
-      - golang
-      - golang-x-tools-gopls
-      - helm
       - htop
-      - ImageMagick
       - jq
-      - kubernetes-client
-      - neovim
       - nmap
       - npm
       - openssl
-      - packer-1.10.3
       - pciutils
       - pinentry
-      - python3-ansible-lint
-      - python3-lsp-server+all
-      - python3-neovim
       - python3-pip
+      - tmux
+      - usbutils
+
+      - ffmpeg
+      - ImageMagick
+      - yt-dlp
+
+      - fzf
+      - fd-find
       - ripgrep
+
+      - neovim
+      - python3-neovim
+
+      # DevOps stuff
+      - ansible
+      - python3-ansible-lint
+
+      - awscli
+
+      - helm
+      - kubernetes-client
+
+      - packer-1.10.3
+      - terraform-1.6.6
+      - terraform-ls
+
+      # Programming Languages
+      - golang
+      - golang-x-tools-gopls
+
+      - python3-lsp-server+all
+
       - ruby
       - rubygem-jekyll
       - rubygem-puppet-lint
+
+      - rust
+      - rust-analyzer
+      - cargo
+
       - ShellCheck
-      - terraform-1.6.6
-      - terraform-ls
-      - tmux
-      - usbutils
-      - yt-dlp
 
     npm_pkgs:
       - "@ansible/ansible-language-server"
