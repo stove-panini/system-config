@@ -51,3 +51,8 @@ serve() {
     # Not "run" but "require un". Crazy. https://github.com/ruby/un
     ruby -run -e httpd -- --port "${1:-8000}" .
 }
+
+geoip() {
+    curl "https://api.hackertarget.com/geoip/?q=$1"
+    echo
+}
