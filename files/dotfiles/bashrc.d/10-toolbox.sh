@@ -21,9 +21,15 @@ alias gd='git diff'
 alias gp='git pull'
 alias gP='git push'
 
-gH() {
-    # H like uh... git home?
-    # Switches to main branch and deletes local branches that've been merged
+gr() {
+    cd "$(git rev-parse --show-toplevel)"
+}
+
+gH() (
+    # ^ This func uses a subshell ( ... ), not a compound command { ... } so
+    # that I can use "set" and not have it affect the caller
+    set -euo pipefail
+
     local main_branch
     local -a branches
     main_branch=$(basename "$(git rev-parse --abbrev-ref origin/HEAD)")
@@ -31,13 +37,15 @@ gH() {
     git checkout "$main_branch"
     git pull
 
-    readarray -t branches < <(git branch --merged | grep -v -e '^\*' -e "$main_branch")
+    readarray -t branches < <(
+        git branch --merged | grep -v -e '^\*' -e "$main_branch"
+    )
 
     for branch in "${branches[@]}"; do
         # Trim leading spaces from branch name and delete it
         git branch -d "${branch#  }"
     done
-}
+)
 
 certinfo() {
     echo -n Q \
