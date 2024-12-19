@@ -14,6 +14,17 @@
       when: os_pkgs is defined
       diff: true
 
+    - name: Install pip packages
+      community.general.pipx:
+        state: latest
+        name: "{{ item }}"
+      environment:
+        PIPX_HOME: /opt/pipx
+        PIPX_BIN_DIR: /usr/local/bin
+        PIPX_MAN_DIR: /usr/local/share/man
+      loop: "{{ pip_pkgs }}"
+      when: npm_pkgs is defined
+
     - name: Install npm packages
       community.general.npm:
         state: "{{ 'present' if item.version is defined else 'latest' }}"
