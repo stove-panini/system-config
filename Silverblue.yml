@@ -111,6 +111,12 @@
           loop:
             - org.gnome.Tour
 
+        - name: Enable HW acceleration in Chromium flatpak
+          ansible.builtin.copy:
+            src: files/host/org.chromium.Chromium.desktop
+            dest: ~/.local/share/applications/
+            mode: "644"
+
         - name: Set gsettings prefs
           ansible.builtin.script: files/host/gsettings.sh
           register: result
