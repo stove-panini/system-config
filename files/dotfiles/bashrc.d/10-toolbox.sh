@@ -22,7 +22,11 @@ alias gp='git pull'
 alias gP='git push'
 
 gr() {
-    cd "$(git rev-parse --show-toplevel)"
+    local repo_root
+    repo_root="$(git rev-parse --show-toplevel)"
+
+    echo "Changing to repo's root dir..."
+    cd "$repo_root"
 }
 
 gH() (
