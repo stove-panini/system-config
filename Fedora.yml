@@ -14,7 +14,7 @@
       - openssl
       - pciutils
       - pinentry
-      - python3-pip
+      - pipx
       - tmux
       - usbutils
 
@@ -44,7 +44,7 @@
 
       # Programming Languages
       - golang
-      - golang-x-tools-gopls
+      - gopls
 
       - python3-lsp-server+all
 
