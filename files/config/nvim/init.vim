@@ -25,12 +25,14 @@ Plug 'airblade/vim-rooter'
 "Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-rsi'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
 
 " language
 Plug 'hrsh7th/vim-vsnip'     " use VSCode snippets
 Plug 'neovim/nvim-lspconfig' " configurations for various LSPs
+Plug 'stove-panini/vim-ca65'
 
 " completion engine & sources
 Plug 'hrsh7th/nvim-cmp'      " the completion engine
