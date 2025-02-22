@@ -13,19 +13,18 @@ augroup FtDetect
   au BufNewFile,BufRead */ansible/*/hosts     setlocal ft=ansible_hosts
   au BufNewFile,BufRead */manifests/*.pp      setlocal ft=puppet
 
-  au BufNewFile,BufRead */pce/*/*.asm setlocal ft=ca65.HuC6280
-  au BufNewFile,BufRead *.inc         setlocal ft=ca65
+  au BufNewFile,BufRead */pce/*/*.asm,*/pce/*/*.inc setlocal ft=pceas
 augroup END
 
 " Instead of an augroup, these could go into individual files at
 " $VIMRUNTIME/after/ftplugin/<filetype>.vim, but is it really worth it?
 augroup FtOverrides
   au!
-  au FileType sh                setlocal sw=4 ts=4
-  au FileType ruby,yaml,vim,lua setlocal sw=2 ts=2
-  au FileType markdown,mkd,text setlocal wrap linebreak
-  au FileType markdown,mkd      setlocal conceallevel=2
-  au FileType ca65*             setlocal noexpandtab sw=8 ts=8 nolist
+  au FileType sh                          setlocal sw=4 ts=4
+  au FileType ruby,yaml,vim,lua,terraform setlocal sw=2 ts=2
+  au FileType markdown,mkd,text           setlocal wrap linebreak
+  au FileType markdown,mkd                setlocal conceallevel=2 nomodeline
+  au FileType pceas                       setlocal noexpandtab sw=8 ts=8 nolist
 augroup END
 
 augroup Terminal

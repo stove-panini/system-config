@@ -32,7 +32,6 @@ Plug 'tpope/vim-surround'
 " language
 Plug 'hrsh7th/vim-vsnip'     " use VSCode snippets
 Plug 'neovim/nvim-lspconfig' " configurations for various LSPs
-Plug 'stove-panini/vim-ca65'
 
 " completion engine & sources
 Plug 'hrsh7th/nvim-cmp'      " the completion engine
@@ -42,6 +41,8 @@ Plug 'hrsh7th/cmp-vsnip'     " snippets
 
 " syntax
 Plug 'HiPhish/jinja.vim'
+Plug 'stove-panini/vim-pceas'
+Plug 'towolf/vim-helm'
 
 call plug#end()
 " -----------------------------------------------------------------------------

@@ -51,7 +51,7 @@ fi
 if type fzf &>/dev/null; then
     eval "$(fzf --bash)"
 
-    fd_opts='--strip-cwd-prefix --hidden --follow'
+    fd_opts='--strip-cwd-prefix --hidden'
     fd_excludes="--exclude .local/share/containers --exclude .var/app --exclude .git --exclude .terraform --exclude .ansible"
 
     export FZF_DEFAULT_COMMAND="fd --type f $fd_opts $fd_excludes"

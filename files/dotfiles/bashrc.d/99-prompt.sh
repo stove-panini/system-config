@@ -105,6 +105,10 @@ __ps1_path() {
     echo -n " [${result}]"
 }
 
+__ps1_time() {
+    echo -n " [$(date +%R)]"
+}
+
 _set_ec() {
     # Store the value of $? so we can act on it in PS1
     # This must be the first thing called by PROMPT_COMMAND
@@ -116,6 +120,7 @@ _set_ps1() {
     local user="${PROMPT_THEME[user]:-bright_blue}"
     local host="${PROMPT_THEME[host]:-blue}"
     local tbhn="${PROMPT_THEME[tbhn]:-cyan}"
+    local time="${PROMPT_THEME[time]:-white}"
     local path="${PROMPT_THEME[path]:-white}"
     local icon="${PROMPT_THEME[icon]:-white}"
     local git="${PROMPT_THEME[git]:-yellow}"
@@ -124,15 +129,16 @@ _set_ps1() {
     unset PS1
 
     # Single-quoted when we want the function *call*, not its result
-    PS1+="$(__ps1_color "$user")\u"
-    PS1+="$(__ps1_color "$host")"'$(__ps1_hostname)'
-    PS1+="$(__ps1_color "$tbhn")"'$(__ps1_toolbox_ssh_hostname)'
-    PS1+="$(__ps1_color "$path")"'$(__ps1_path)'
-    PS1+="$(__ps1_color "$git")"'$(__ps1_git)'
-    PS1+="$(__ps1_color "$ec")"'$(__ps1_ec)'
-    PS1+="\n"
-    PS1+="$(__ps1_color "$icon")$ "
-    PS1+="$(__ps1_color reset)"
+    PS1+=$(__ps1_color "$user")'\u'
+    PS1+=$(__ps1_color "$host")'$(__ps1_hostname)'
+    PS1+=$(__ps1_color "$tbhn")'$(__ps1_toolbox_ssh_hostname)'
+    #PS1+=$(__ps1_color "$time")'$(__ps1_time)'
+    PS1+=$(__ps1_color "$path")'$(__ps1_path)'
+    PS1+=$(__ps1_color "$git")'$(__ps1_git)'
+    PS1+=$(__ps1_color "$ec")'$(__ps1_ec)'
+    PS1+='\n'
+    PS1+=$(__ps1_color "$icon")'$ '
+    PS1+=$(__ps1_color reset)
 }
 
 if [[ -z $PROMPT_COMMAND ]]; then
