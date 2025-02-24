@@ -92,3 +92,16 @@
     owner: root
     group: root
     mode: "644"
+
+- name: Check crypto policy
+  ansible.builtin.command:
+    cmd: update-crypto-policies --show
+  changed_when: false
+  register: result
+
+  # Allow SSH to olllllllld distros
+- name: Set crypto policy to LEGACY
+  ansible.builtin.command:
+    cmd: update-crypto-policies --set LEGACY
+  changed_when: true
+  when: "result.stdout != 'LEGACY'"
