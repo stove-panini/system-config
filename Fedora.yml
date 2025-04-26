@@ -10,7 +10,7 @@
       - htop
       - jq
       - nmap
-      - npm
+      - nodejs-npm
       - nvtop
       - openssl
       - pciutils
