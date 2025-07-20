@@ -49,6 +49,10 @@
       - terraform-ls
 
       # Programming Languages
+      - cmake
+      - gcc
+      - ninja-build
+
       - golang
       - gopls
 
