@@ -1,2 +1,5 @@
 # Set ThinkPad battery thresholds
-KERNEL=="BAT0", SUBSYSTEM=="power_supply", ATTR{charge_control_end_threshold}="80", ATTR{charge_control_start_threshold}="75"
+#
+# GNOME does this for us now :)
+#
+# KERNEL=="BAT0", SUBSYSTEM=="power_supply", ATTR{charge_control_end_threshold}="80", ATTR{charge_control_start_threshold}="75"
