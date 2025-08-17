@@ -41,7 +41,21 @@
           - org.remmina.Remmina
           - org.signal.Signal
 
-    - name: Remove fedora flatpak remote
+    - name: Enable openh264 for Firefox
+      block:
+        # No dnf, so use rpm (which makes ansible-lint yell)
+        - name: Check if mozilla-openh264 exists
+          ansible.builtin.command:
+            cmd: rpm -qi mozilla-openh264 # noqa: command-instead-of-module
+          changed_when: false
+      rescue:
+        # No suitable module to do compound transactions like this
+        - name: Replace noopenh264 with mozilla-openh264
+          ansible.builtin.command:
+            cmd: rpm-ostree override remove noopenh264 --install mozilla-openh264
+          changed_when: true
+
+    - name: Remove Fedora flatpak remote
       community.general.flatpak_remote:
         state: absent
         name: fedora
@@ -72,14 +86,20 @@
     - name: Laptop tasks
       when: ansible_form_factor == 'Notebook'
       block:
-        - name: Enable battery charging thresholds
-          ansible.builtin.copy:
-            src: files/host/etc/udev/rules.d/battery-care.rules
-            dest: /etc/udev/rules.d/
-            owner: root
-            group: root
-            mode: "644"
-            setype: udev_rules_t
+        # GNOME does this for us now :D
+        #- name: Enable battery charging thresholds
+        #  ansible.builtin.copy:
+        #    src: files/host/etc/udev/rules.d/battery-care.rules
+        #    dest: /etc/udev/rules.d/
+        #    owner: root
+        #    group: root
+        #    mode: "644"
+        #    setype: udev_rules_t
+        #  notify: Trigger udev rules
+        - name: Ensure old battery care udev rule is gone
+          ansible.builtin.file:
+            path: /etc/udev/rules.d/battery-care.rules
+            state: absent
           notify: Trigger udev rules
 
     - name: User configuration
