@@ -41,6 +41,7 @@ Plug 'hrsh7th/cmp-vsnip'     " snippets
 
 " syntax
 Plug 'HiPhish/jinja.vim'
+Plug 'rodjek/vim-puppet'
 Plug 'stove-panini/vim-pceas'
 Plug 'towolf/vim-helm'
 
