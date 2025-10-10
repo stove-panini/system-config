@@ -87,15 +87,6 @@
       when: ansible_form_factor == 'Notebook'
       block:
         # GNOME does this for us now :D
-        #- name: Enable battery charging thresholds
-        #  ansible.builtin.copy:
-        #    src: files/host/etc/udev/rules.d/battery-care.rules
-        #    dest: /etc/udev/rules.d/
-        #    owner: root
-        #    group: root
-        #    mode: "644"
-        #    setype: udev_rules_t
-        #  notify: Trigger udev rules
         - name: Ensure old battery care udev rule is gone
           ansible.builtin.file:
             path: /etc/udev/rules.d/battery-care.rules
