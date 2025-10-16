@@ -86,12 +86,14 @@
     - name: Laptop tasks
       when: ansible_form_factor == 'Notebook'
       block:
-        # GNOME does this for us now :D
-        - name: Ensure old battery care udev rule is gone
-          ansible.builtin.file:
-            path: /etc/udev/rules.d/battery-care.rules
-            state: absent
-          notify: Trigger udev rules
+        - name: Disable wifi when connected to wired network
+          ansible.builtin.copy:
+            src: files/host/etc/NetworkManager/dispatcher.d/10-no-wifi-when-wired.sh
+            dest: /etc/NetworkManager/dispatcher.d/
+            owner: root
+            group: root
+            mode: "755"
+            setype: NetworkManager_dispatcher_script_t
 
     - name: User configuration
       become: false
