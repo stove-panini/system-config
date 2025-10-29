@@ -89,7 +89,8 @@
     state: present
     name: hashicorp
     description: Hashicorp Stable - $basearch
-    baseurl: https://rpm.releases.hashicorp.com/fedora/$releasever/$basearch/stable
+  # baseurl: https://rpm.releases.hashicorp.com/fedora/$releasever/$basearch/stable
+    baseurl: https://rpm.releases.hashicorp.com/fedora/{{ ansible_distribution_major_version|int - 1 }}/$basearch/stable
     enabled: true
     gpgcheck: true
     gpgkey: https://rpm.releases.hashicorp.com/gpg
