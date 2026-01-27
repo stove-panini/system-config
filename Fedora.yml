@@ -41,6 +41,7 @@
       - python3-kubernetes
 
       - awscli
+      - python3-boto3
 
       - helm
       - kubernetes-client
