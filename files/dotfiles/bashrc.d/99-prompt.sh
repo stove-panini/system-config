@@ -40,11 +40,11 @@ __ps1_git() {
 
     local result branch tag changes
     branch="$(git branch --show-current 2>/dev/null || :)"
+    tag="$(git describe --tags --exact-match 2>/dev/null || :)"
 
     # Return if not in a git repo
-    [[ $branch ]] || return
+    [[ $branch || $tag ]] || return
 
-    tag="$(git describe --tags --exact-match 2>/dev/null || :)"
     changes="$(git status --short 2>/dev/null || :)"
 
     if [[ $tag ]]; then
